@@ -1,0 +1,65 @@
+.app {
+  width: 100%;
+}
+
+.status-card {
+  width: min(100%, 32rem);
+  padding: 2rem;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: none;
+  text-align: left;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.status-card h1 {
+  margin: 0 0 1rem;
+  font-size: 2rem;
+  color: #111827;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 1rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.status-badge--loading {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.status-badge--healthy {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.status-badge--error {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.status-message {
+  margin: 0 0 0.75rem;
+  color: #374151;
+}
+
+.status-meta {
+  margin: 0 0 1.5rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
