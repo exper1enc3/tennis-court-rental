@@ -6,6 +6,27 @@ The backend uses `FastAPI`, `SQLAlchemy`, `SQLite`, and `Alembic`. SQLite is the
 
 For the architecture and domain design, see `ARCHITECTURE.md`.
 
+## ToDo
+
+### Frontend
+
+- user sign up and sign in pages
+- main page with one button: `Sign up` or `Sign in`
+- after login, replace this button text with user full name (`first_name` + `last_name`)
+
+### API
+
+- route for sign up
+- route for sign in
+- route for querying own profile data
+- route for editing own profile
+- route for deleting own profile (soft delete by setting `is_active = false`)
+
+### Infra
+
+- user repository
+- TODO is written in `app /infrastructure/event_store.py`
+
 ## Current Status
 
 The repository already includes:
@@ -318,3 +339,4 @@ Its current job is intentionally simple:
 This keeps Docker usage simple because the browser only needs one URL:
 
 - `http://localhost`
+

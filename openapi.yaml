@@ -1,0 +1,255 @@
+openapi: 3.1.0
+info:
+  title: Courtly API
+  version: 0.1.0
+  description: Tennis court booking system API
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+  - url: http://localhost
+    description: Docker Compose (via nginx)
+
+tags:
+  - name: Auth
+    description: User registration and authentication
+
+paths:
+  /auth/signup:
+    post:
+      summary: Register a new user
+      operationId: signUp
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+            example:
+              first_name: Alice
+              last_name: Smith
+              email: alice@example.com
+              password: s3cur3p@ss
+              role: player
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+              example:
+                id: 1
+                first_name: Alice
+                last_name: Smith
+                email: alice@example.com
+                role: player
+                is_active: true
+                created_at: '2026-03-16T10:00:00Z'
+        '409':
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Email already registered
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+  /auth/signin:
+    post:
+      summary: Sign in and obtain an access token
+      operationId: signIn
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+            example:
+              email: alice@example.com
+              password: s3cur3p@ss
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+              example:
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzQyMTQwMDAwfQ.abc
+                token_type: bearer
+                user:
+                  id: 1
+                  first_name: Alice
+                  last_name: Smith
+                  email: alice@example.com
+                  role: player
+                  is_active: true
+                  created_at: '2026-03-16T10:00:00Z'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Invalid email or password
+        '403':
+          description: Account is inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: Account is inactive
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+
+components:
+  schemas:
+    SignUpRequest:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - email
+        - password
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: Alice
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: Smith
+        email:
+          type: string
+          format: email
+          example: alice@example.com
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: s3cur3p@ss
+        role:
+          type: string
+          enum:
+            - player
+            - admin
+          default: player
+          example: player
+
+    SignInRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: alice@example.com
+        password:
+          type: string
+          format: password
+          example: s3cur3p@ss
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: Alice
+        last_name:
+          type: string
+          example: Smith
+        email:
+          type: string
+          format: email
+          example: alice@example.com
+        role:
+          type: string
+          enum:
+            - player
+            - admin
+          example: player
+        is_active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-03-16T10:00:00Z'
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT bearer token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          enum:
+            - bearer
+          example: bearer
+        user:
+          $ref: '#/components/schemas/UserResponse'
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: Invalid email or password
+
+    ValidationErrorResponse:
+      type: object
+      description: FastAPI default validation error shape
+      properties:
+        detail:
+          type: array
+          items:
+            type: object
+            properties:
+              loc:
+                type: array
+                items:
+                  oneOf:
+                    - type: string
+                    - type: integer
+                example:
+                  - body
+                  - email
+              msg:
+                type: string
+                example: value is not a valid email address
+              type:
+                type: string
+                example: value_error.email
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
