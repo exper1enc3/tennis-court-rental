@@ -1,5 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel, EmailStr
+from sqlalchemy.orm import Session
+from app.infrastructure.sqlite import get_db
+from app.application.handlers import handle_signup, handle_signin, SignUpCommand, SignInCommand
 
 router = APIRouter()
 
@@ -52,28 +55,21 @@ def healthcheck():
     return {"status": "ok"}
 
 
-@router.post("/auth/signup", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
-def signup(body: SignUpRequest):
-    return UserResponse(
-        id=2,
+@router.post("/auth/signup", status_code=status.HTTP_201_CREATED)
+def signup(body: SignUpRequest, db: Session = Depends(get_db)):
+    result = handle_signup(SignUpCommand(
         first_name=body.first_name,
         last_name=body.last_name,
         email=body.email,
+        password=body.password,
         role=body.role,
-        is_active=True,
-        created_at="2026-03-16T10:00:00Z",
-    )
+    ), db)
+    return result
 
-
-@router.post("/auth/signin", response_model=TokenResponse)
-def signin(body: SignInRequest):
-    if body.email != _HARDCODED_EMAIL or body.password != _HARDCODED_PASSWORD:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
-        )
-    return TokenResponse(
-        access_token="hardcoded.jwt.token",
-        token_type="bearer",
-        user=_HARDCODED_USER,
-    )
+@router.post("/auth/signin")
+def signin(body: SignInRequest, db: Session = Depends(get_db)):
+    result = handle_signin(SignInCommand(
+        email=body.email,
+        password=body.password,
+    ), db)
+    return result
