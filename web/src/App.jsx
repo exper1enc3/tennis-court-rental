@@ -2,12 +2,13 @@ import { useState } from 'react'
 import './App.css'
 import AuthForm from './AuthForm'
 
+const LOGO_SRC = '/courtly.png'
+const HERO_BG_SRC = '/bg.png'
+
 function Logo({ inBadge = false }) {
   return (
     <div className={inBadge ? 'logo logo--badge' : 'logo'} aria-label="courtly logo">
-      <span className="logo__text">c</span>
-      <span className="logo__ball" />
-      <span className="logo__text">urtly</span>
+      <img className="logo__image" src={LOGO_SRC} alt="Courtly" />
     </div>
   )
 }
@@ -26,13 +27,7 @@ function App() {
             </div>
 
             <div className="court">
-              <div className="court__outer" />
-              <div className="court__topLine" />
-              <div className="court__bottomLine" />
-              <div className="court__leftInner" />
-              <div className="court__rightInner" />
-              <div className="court__centerService" />
-              <div className="court__net" />
+              <img className="court__image" src={HERO_BG_SRC} alt="" aria-hidden="true" />
             </div>
 
             <div className="hero__content">

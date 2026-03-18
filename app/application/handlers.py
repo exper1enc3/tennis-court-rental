@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
@@ -54,6 +55,7 @@ def handle_signup(cmd: SignUpCommand, db: Session) -> AuthResult:
     )
 
     event_store.append({
+        "id": str(uuid4()),
         "event_type": "user_signed_up",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "data": {
@@ -64,6 +66,7 @@ def handle_signup(cmd: SignUpCommand, db: Session) -> AuthResult:
             "role": user.role,
             "is_active": True,
             "created_at": user.created_at.isoformat(),
+            "password_hash": user.password_hash,
         },
     })
 
@@ -94,6 +97,7 @@ def handle_signin(cmd: SignInCommand, db: Session) -> AuthResult:
         raise ValueError("Invalid email or password")
 
     event_store.append({
+        "id": str(uuid4()),
         "event_type": "user_signed_in",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "data": {

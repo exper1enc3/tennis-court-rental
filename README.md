@@ -204,6 +204,7 @@ The initial schema contains five tables:
 - `first_name`
 - `last_name`
 - `email`
+- `password_hash`
 - `role`
 - `created_at`
 - `is_active`

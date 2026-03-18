@@ -39,6 +39,7 @@ class UserRepository(BaseRepository[UserModel]):
         first_name: str,
         last_name: str,
         email: str,
+        password_hash: str,
         role: str = "player",
         is_active: bool = True,
     ) -> UserModel:
@@ -46,6 +47,7 @@ class UserRepository(BaseRepository[UserModel]):
             first_name=first_name,
             last_name=last_name,
             email=email,
+            password_hash=password_hash,
             role=role,
             is_active=is_active,
         )
@@ -76,7 +78,13 @@ class UserRepository(BaseRepository[UserModel]):
 # # signup use case:
 # if repo.get_by_email(cmd.email):
 #     raise ValueError("Email already exists")
-# user = repo.create(cmd.first_name, cmd.last_name, cmd.email, role="player")
+# user = repo.create(
+#     cmd.first_name,
+#     cmd.last_name,
+#     cmd.email,
+#     password_hash=hash_password(cmd.password),
+#     role="player",
+# )
 #
 # # signin use case:
 # user = repo.get_by_email(cmd.email)

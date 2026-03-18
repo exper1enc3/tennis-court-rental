@@ -23,6 +23,7 @@ class UserModel(Base):
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True, index=True)
+    password_hash = Column(String, nullable=False)
     role = Column(String, nullable=False)
     created_at = Column(DateTime, nullable=False, server_default=func.now())
     is_active = Column(Boolean, nullable=False, default=True, server_default="1")

@@ -21,7 +21,7 @@ body,
   min-height: 100%;
   background: var(--courtly-dark);
   color: var(--courtly-white);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Syne", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body {
@@ -46,6 +46,12 @@ input {
   display: inline-flex;
   align-items: center;
   line-height: 1;
+}
+
+.logo__image {
+  display: block;
+  width: 280px;
+  height: auto;
 }
 
 .logo__text {
@@ -89,6 +95,10 @@ input {
 
 .logo--badge .logo__text {
   font-size: 50px;
+}
+
+.logo--badge .logo__image {
+  width: 240px;
 }
 
 .logo--badge .logo__ball {
@@ -145,73 +155,19 @@ input {
   z-index: 5;
 }
 
-/* court */
-.court__outer {
+/* court background image */
+.court {
   position: absolute;
-  left: 20%;
-  right: 20%;
-  top: 18%;
-  bottom: 21%;
-  border: 5px solid var(--courtly-line);
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.court__topLine,
-.court__bottomLine {
-  position: absolute;
-  left: 20%;
-  right: 20%;
-  height: 5px;
-  background: var(--courtly-line);
-}
-
-.court__topLine {
-  top: 31%;
-}
-
-.court__bottomLine {
-  bottom: 33%;
-}
-
-.court__leftInner,
-.court__rightInner {
-  position: absolute;
-  top: 31%;
-  bottom: 33%;
-  width: 5px;
-  background: var(--courtly-line);
-}
-
-.court__leftInner {
-  left: 37%;
-}
-
-.court__rightInner {
-  right: 37%;
-}
-
-.court__centerService {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 45%;
-  width: 5px;
-  height: 18%;
-  background: var(--courtly-line);
-}
-
-.court__net {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) perspective(300px) rotateY(-10deg);
-  top: 18%;
-  bottom: 21%;
-  width: 10px;
-  background: linear-gradient(
-    to bottom,
-    rgba(84, 40, 24, 0.95),
-    rgba(30, 12, 8, 0.78)
-  );
-  box-shadow: 16px 0 0 rgba(50, 20, 11, 0.28);
+.court__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   opacity: 0.9;
 }
 
@@ -296,6 +252,10 @@ input {
 
 .auth-page__inner > .logo .logo__text {
   font-size: 52px;
+}
+
+.auth-page__inner > .logo .logo__image {
+  width: 260px;
 }
 
 .auth-page__inner > .logo .logo__ball {
@@ -454,7 +414,7 @@ input {
   background: var(--courtly-lime);
   color: #050505;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -502,6 +462,10 @@ input {
 
   .logo__text {
     font-size: 42px;
+  }
+
+  .logo__image {
+    width: 210px;
   }
 
   .logo__ball {

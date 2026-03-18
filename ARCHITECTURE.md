@@ -170,6 +170,7 @@ Stores application users and roles.
 Important constraints:
 
 - unique `email`
+- `password_hash` is required (store hash only, never plaintext password)
 - `is_active` soft-activation flag
 
 ### `courts`

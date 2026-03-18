@@ -36,20 +36,6 @@ class TokenResponse(BaseModel):
     user: UserResponse
 
 
-_HARDCODED_USER = UserResponse(
-    id=1,
-    first_name="Max",
-    last_name="Loh",
-    email="maxloh@example.com",
-    role="player",
-    is_active=True,
-    created_at="2026-03-16T10:00:00Z",
-)
-
-_HARDCODED_EMAIL = "maxloh"
-_HARDCODED_PASSWORD = "1234"
-
-
 @router.get("/health")
 def healthcheck():
     return {"status": "ok"}
