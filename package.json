@@ -1,0 +1,20 @@
+{
+  "name": "tennis-court-rental",
+  "version": "1.0.0",
+  "description": "Courtly is a tennis court booking system with a Python backend and a React frontend.",
+  "homepage": "https://github.com/exper1enc3/tennis-court-rental#readme",
+  "bugs": {
+    "url": "https://github.com/exper1enc3/tennis-court-rental/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exper1enc3/tennis-court-rental.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
