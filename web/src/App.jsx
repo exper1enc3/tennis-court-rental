@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import './App.css'
 import AuthForm from './AuthForm'
+import Profile from './Profile'
 
 const LOGO_SRC = '/courtly.png'
 const HERO_BG_SRC = '/bg.png'
 
-function Logo({ inBadge = false }) {
+export function Logo({ inBadge = false }) {
   return (
     <div className={inBadge ? 'logo logo--badge' : 'logo'} aria-label="courtly logo">
       <img className="logo__image" src={LOGO_SRC} alt="Courtly" />
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <main className="app">
+      {/* 1. Головний екран (Hero), якщо не залогінені і не відкрита форма */}
       {!showAuth && !user && (
         <section className="hero">
           <div className="hero__card">
@@ -61,6 +63,7 @@ function App() {
         </section>
       )}
 
+      {/* 2. Екран авторизації (Sign In / Sign Up) */}
       {showAuth && !user && (
         <section className="auth-page">
           <div className="auth-page__inner">
@@ -74,32 +77,15 @@ function App() {
         </section>
       )}
 
+      {/* 3. Кабінет користувача (Profile) */}
       {user && (
-        <section className="auth-page">
-          <div className="auth-page__inner">
-            <Logo />
-            <div className="auth-card">
-              <h2 className="auth-card__title">
-                {user.first_name} {user.last_name}
-              </h2>
-
-              <p className="auth-card__logged">
-                You are successfully logged in as a {user.role}.
-              </p>
-
-              <button
-                type="button"
-                className="auth-submit"
-                onClick={() => {
-                  setUser(null)
-                  setShowAuth(false)
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </section>
+        <Profile 
+          user={user} 
+          onLogout={() => {
+            setUser(null)
+            setShowAuth(false)
+          }} 
+        />
       )}
     </main>
   )

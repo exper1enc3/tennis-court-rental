@@ -1,6 +1,7 @@
 :root {
   --courtly-lime: #d4e137;
   --courtly-dark: #050505;
+  --courtly-beige: rgba(240, 237, 228, 1);
   --courtly-white: #ffffff;
   --courtly-orange-top: #f06f2f;
   --courtly-orange-bottom: #ea6527;
@@ -434,7 +435,98 @@ input {
   cursor: pointer;
   padding: 0;
 }
+/* ===================== PROFILE PAGE ===================== */
 
+.profile-page {
+  background: var(--courtly-beige);
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 120px minmax(470px, max-content) 1fr 120px;
+  grid-template-rows: 80px 1fr 80px;
+}
+
+
+.bp-cell {
+  border-right: 1px dashed black;
+  border-bottom: 1px dashed black;
+}
+
+
+.bp-cell--no-right { border-right: none; }
+.bp-cell--no-bottom { border-bottom: none; }
+
+.profile-logo-cell {
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+}
+
+.logo-wrapper.logo--dark .logo__image {
+  filter: brightness(0); 
+}
+
+.profile-sidebar-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.profile-user-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px; 
+  border-bottom: 1px dashed black; 
+}
+
+.profile-user__icon {
+  width: 55px;
+  height: 50px;
+  min-width: 48px;
+  background: var(--courtly-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.profile-user__icon svg {
+  width: 30px;
+  height: 30px;
+  color: var(--courtly-dark);
+}
+
+.profile-user__name {
+  font-size: 29px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--courtly-dark);
+ /*  white-space: nowrap; */
+}
+
+
+.profile-logout-section {
+  padding: 24px;
+}
+
+.profile-logout {
+  height: 42px;
+  background: transparent;
+  border: 1px solid var(--courtly-dark);
+  color: var(--courtly-dark);
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+.profile-logout:hover {
+  background: var(--courtly-dark);
+  color: var(--courtly-white);
+}
 /* ===================== MOBILE ===================== */
 
 @media (max-width: 900px) {
@@ -471,5 +563,13 @@ input {
   .logo__ball {
     width: 24px;
     height: 24px;
+  }
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-sidebar {
+    border-right: none;
+    border-bottom: 1px dashed rgba(5, 5, 5, 0.2);
   }
 }
