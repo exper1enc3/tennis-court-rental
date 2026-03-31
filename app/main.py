@@ -4,6 +4,13 @@ import uvicorn
 
 from app.api.routes import router
 
+from app.infrastructure.database import engine, Base
+from app.infrastructure.models import * 
+
+@app.on_event("startup")
+def on_startup():
+    Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(title="courtly")
 
