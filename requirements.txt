@@ -3,3 +3,4 @@ fastapi
 uvicorn
 alembic
 gunicorn
+pydantic[email]
