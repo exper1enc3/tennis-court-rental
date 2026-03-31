@@ -4,7 +4,7 @@ import uvicorn
 
 from app.api.routes import router
 
-from app.infrastructure.database import engine, Base
+from app.infrastructure.sqlite import engine, Base
 from app.infrastructure.models import * 
 
 @app.on_event("startup")
