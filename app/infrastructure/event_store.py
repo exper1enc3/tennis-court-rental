@@ -35,6 +35,7 @@ import os
 import uuid
 from datetime import datetime
 from typing import List, Dict, Any
+from app.infrastructure.versioning import EventStoreVersioning
 
 EVENTS_FILE = 'db/events.jsonl'
 
@@ -61,6 +62,9 @@ class EventStore:
             raise ValueError("The event has an incomplete structure.")
         with open(self.file_path, 'a') as f:
             f.write(json.dumps(event) + "\n")
+
+        _vsn = EventStoreVersioning()
+        _vsn.create_snapshot(created_by="system")
 
     def read_all(self) -> List[Dict[str, Any]]:
         events = []
