@@ -4,6 +4,9 @@ import uvicorn
 
 from app.api.routes import router
 
+from fastapi.staticfiles import StaticFiles
+
+
 app = FastAPI(title="courtly")
 
 # Enable CORS so the React frontend can communicate with this API
@@ -14,6 +17,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/app", StaticFiles(directory="app/static", html=True), name="static")
 
 app.include_router(router)
 
