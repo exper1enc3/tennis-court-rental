@@ -8,6 +8,9 @@ from app.application.authz_service import hash_password, verify_password, genera
 from app.infrastructure.repository import UserRepository
 from app.infrastructure.event_store import EventStore
 
+from typing import Optional
+from app.infrastructure.repository import CourtRepository
+
 
 @dataclass
 class SignUpCommand:
@@ -111,6 +114,136 @@ def handle_signin(cmd: SignInCommand, db: Session) -> AuthResult:
     return AuthResult(
         access_token=token,
         token_type="bearer",
+        user_id=user.id,
+        email=user.email,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        role=user.role,
+        is_active=user.is_active,
+        created_at=user.created_at.isoformat(),
+    )
+
+@dataclass
+class GetCourtsQuery:
+    city: Optional[str] = None
+    district: Optional[str] = None
+
+
+@dataclass
+class GetCourtByIdQuery:
+    court_id: int
+
+
+@dataclass
+class GetDistrictsQuery:
+    city: str
+
+
+@dataclass
+class GetCurrentUserQuery:
+    user_id: int
+
+
+@dataclass
+class CourtSummaryResult:
+    id: int
+    name: str
+    surface_type: str
+    city: str
+    district: str
+    address: str
+
+
+@dataclass
+class CourtListResult:
+    courts: list[CourtSummaryResult]
+    total: int
+
+
+@dataclass
+class CourtDetailResult:
+    id: int
+    name: str
+    surface_type: str
+    city: str
+    district: str
+    address: str
+
+
+@dataclass
+class CityListResult:
+    cities: list[str]
+
+
+@dataclass
+class DistrictListResult:
+    city: str
+    districts: list[str]
+
+
+@dataclass
+class CurrentUserResult:
+    user_id: int
+    email: str
+    first_name: str
+    last_name: str
+    role: str
+    is_active: bool
+    created_at: str
+
+
+def handle_get_courts(query: GetCourtsQuery, db: Session) -> CourtListResult:
+    repo = CourtRepository(db)
+    courts = repo.get_all(city=query.city, district=query.district)
+    return CourtListResult(
+        courts=[
+            CourtSummaryResult(
+                id=court.id,
+                name=court.name,
+                surface_type=court.surface_type,
+                city=court.city,
+                district=court.district,
+                address=court.address,
+            )
+            for court in courts
+        ],
+        total=len(courts),
+    )
+
+
+def handle_get_court_by_id(query: GetCourtByIdQuery, db: Session) -> CourtDetailResult:
+    repo = CourtRepository(db)
+    court = repo.get_by_id(query.court_id)
+    if court is None:
+        raise ValueError(f"Court with id {query.court_id} not found")
+    return CourtDetailResult(
+        id=court.id,
+        name=court.name,
+        surface_type=court.surface_type,
+        city=court.city,
+        district=court.district,
+        address=court.address,
+    )
+
+
+def handle_get_cities(db: Session) -> CityListResult:
+    repo = CourtRepository(db)
+    cities = repo.get_distinct_cities()
+    return CityListResult(cities=cities)
+
+
+def handle_get_districts(query: GetDistrictsQuery, db: Session) -> DistrictListResult:
+    repo = CourtRepository(db)
+    districts = repo.get_distinct_districts(city=query.city)
+    return DistrictListResult(city=query.city, districts=districts)
+
+
+def handle_get_current_user(query: GetCurrentUserQuery, db: Session) -> CurrentUserResult:
+    repo = UserRepository(db)
+    user = repo.get_by_id(query.user_id)
+    if user is None or not user.is_active:
+        raise ValueError("User not found")
+    return CurrentUserResult(
         user_id=user.id,
         email=user.email,
         first_name=user.first_name,
