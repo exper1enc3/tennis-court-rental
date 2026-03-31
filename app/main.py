@@ -7,12 +7,11 @@ from app.api.routes import router
 from app.infrastructure.sqlite import engine, Base
 from app.infrastructure.models import * 
 
+app = FastAPI(title="courtly")
+
 @app.on_event("startup")
 def on_startup():
     Base.metadata.create_all(bind=engine)
-
-
-app = FastAPI(title="courtly")
 
 # Enable CORS so the React frontend can communicate with this API
 app.add_middleware(
