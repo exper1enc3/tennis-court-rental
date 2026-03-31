@@ -10,7 +10,7 @@ app = FastAPI(title="courtly")
 # Enable CORS so the React frontend can communicate with this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Your Vite dev server URL
+    allow_origins=["http://localhost:5173", "https://orange-mud-027edf503.1.azurestaticapps.net"],  # Your Vite dev server URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
