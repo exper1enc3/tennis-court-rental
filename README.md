@@ -341,3 +341,25 @@ This keeps Docker usage simple because the browser only needs one URL:
 
 - `http://localhost`
 
+
+## Sprint 2
+
+### ToDo:
+- logout endpoint & handlers
+- logout logic in authz_service
+- user can querry own data endpoint & handlers
+- authn_service to check user access & ownership
+- access matrix
+
+```
+roles:
+  - admin
+  - manager
+  - user
+
+permissions:
+  create_booking: [user, manager, admin]
+  delete_booking: [admin]
+```
+
+

@@ -32,7 +32,7 @@ paths:
               last_name: Smith
               email: alice@example.com
               password: s3cur3p@ss
-              role: player
+              role: user
       responses:
         '201':
           description: User created successfully
@@ -45,7 +45,7 @@ paths:
                 first_name: Alice
                 last_name: Smith
                 email: alice@example.com
-                role: player
+                role: user
                 is_active: true
                 created_at: '2026-03-16T10:00:00Z'
         '409':
@@ -93,7 +93,7 @@ paths:
                   first_name: Alice
                   last_name: Smith
                   email: alice@example.com
-                  role: player
+                  role: user
                   is_active: true
                   created_at: '2026-03-16T10:00:00Z'
         '401':
@@ -151,10 +151,10 @@ components:
         role:
           type: string
           enum:
-            - player
+            - user
             - admin
-          default: player
-          example: player
+          default: user
+          example: user
 
     SignInRequest:
       type: object
@@ -190,9 +190,9 @@ components:
         role:
           type: string
           enum:
-            - player
+            - user
             - admin
-          example: player
+          example: user
         is_active:
           type: boolean
           example: true

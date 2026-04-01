@@ -11,7 +11,7 @@ import time
 _PBKDF2_ALGORITHM = "sha256"
 _PBKDF2_ITERATIONS = 200_000
 _PBKDF2_SALT_BYTES = 16
-_TOKEN_TTL_SECONDS = 60 * 60 * 24  # 24 hours
+_TOKEN_TTL_SECONDS = 60 * 60 * 24 
 
 
 def _b64url_encode(raw: bytes) -> str:

@@ -57,6 +57,7 @@ function AuthForm({ onLoginSuccess }) {
           email: formData.email,
           password: formData.password,
         })
+        console.log(data)
         onLoginSuccess(data.user)
       } else {
         await authApi.signup({

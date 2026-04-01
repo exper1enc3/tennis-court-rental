@@ -1,4 +1,5 @@
-sqlalchemy
-fastapi
-uvicorn
-alembic
+fastapi>=0.110
+uvicorn[standard]>=0.29
+sqlalchemy>=2.0
+alembic>=1.13
+pydantic[email]>=2.6

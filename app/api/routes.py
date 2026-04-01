@@ -54,8 +54,11 @@ def signup(body: SignUpRequest, db: Session = Depends(get_db)):
 
 @router.post("/auth/signin")
 def signin(body: SignInRequest, db: Session = Depends(get_db)):
-    result = handle_signin(SignInCommand(
-        email=body.email,
-        password=body.password,
-    ), db)
-    return result
+    try:
+        result = handle_signin(SignInCommand(
+            email=body.email,
+            password=body.password,
+        ), db)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
