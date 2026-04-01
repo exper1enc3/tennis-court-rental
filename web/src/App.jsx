@@ -3,6 +3,7 @@ import { MapPin, Clock, Layers2, Sun, Warehouse, Banknote } from 'lucide-react'
 import './App.css'
 import AuthForm from './AuthForm'
 import Profile from './Profile'
+import { CourtsMap } from './CourtsMap'
 
 const LOGO_SRC = '/courtly.png'
 const HERO_BG_BW = '/image2.jpg'
