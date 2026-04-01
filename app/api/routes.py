@@ -3,6 +3,15 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 from app.infrastructure.sqlite import get_db
 from app.application.handlers import handle_signup, handle_signin, SignUpCommand, SignInCommand
+from typing import Optional
+from app.application.handlers import (
+    handle_signup, handle_signin, SignUpCommand, SignInCommand,
+    handle_get_courts, handle_get_court_by_id, handle_get_cities,
+    handle_get_districts, handle_get_current_user,
+    GetCourtsQuery, GetCourtByIdQuery, GetDistrictsQuery, GetCurrentUserQuery,
+)
+from app.application.authz_service import decode_token
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 router = APIRouter()
 

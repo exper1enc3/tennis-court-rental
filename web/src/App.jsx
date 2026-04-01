@@ -2,7 +2,7 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { MapPin, Clock, Layers2, Sun, Warehouse, Banknote } from 'lucide-react'
 import './App.css'
 import AuthForm from './AuthForm'
-import { CourtsMap } from './CourtsMap.jsx'
+import Profile from './Profile'
 
 const LOGO_SRC = '/courtly.png'
 const HERO_BG_BW = '/image2.jpg'
@@ -341,7 +341,7 @@ function ReadyToPlaySection({ onBook, sectionRef }) {
   )
 }
 
-function Logo({ inBadge = false }) {
+export function Logo({ inBadge = false }) {
   return (
     <div className={inBadge ? 'logo logo--badge' : 'logo'} aria-label="courtly logo">
       <img className="logo__image" src={LOGO_SRC} alt="Courtly" />
@@ -502,26 +502,7 @@ function App() {
 
   return (
     <main className="app">
-      {preloaderMounted && (
-        <div
-          className={`page-preloader ${preloaderDone ? 'page-preloader--done' : ''}`}
-          aria-busy={!preloaderDone}
-          aria-label="Loading"
-          onTransitionEnd={(e) => {
-            if (e.propertyName === 'opacity' && preloaderDone) setPreloaderMounted(false)
-          }}
-        >
-          <div className="page-preloader__inner">
-            <PreloaderLogo />
-          </div>
-        </div>
-      )}
-
-      <div className="cursor-fx is-hidden" ref={cursorFxRef} aria-hidden="true">
-        <div className="cursor-fx__ring" ref={cursorRingRef} />
-        <div className="cursor-fx__dot" ref={cursorDotRef} />
-      </div>
-
+      {/* 1. Головний екран (Hero), якщо не залогінені і не відкрита форма */}
       {!showAuth && !user && (
         <div className="landing-snap" ref={snapContainerRef}>
           <section className="hero page-snap hero--snap">
@@ -658,6 +639,7 @@ function App() {
         </div>
       )}
 
+      {/* 2. Екран авторизації (Sign In / Sign Up) */}
       {showAuth && !user && (
         <section className="auth-page">
           <div className="auth-page__inner">
@@ -692,37 +674,15 @@ function App() {
         </section>
       )}
 
+      {/* 3. Кабінет користувача (Profile) */}
       {user && (
-        <section className="auth-page">
-          <div className="auth-page__inner">
-            <Logo />
-            <div className="auth-card">
-              <div className="user-avatar" aria-hidden="true">
-                {user.first_name[0]}
-                {user.last_name[0]}
-              </div>
-              <h2 className="auth-card__title">
-                {user.first_name} {user.last_name}
-              </h2>
-              <p className="auth-card__email">{user.email}</p>
-              <p className="auth-card__logged">
-                Signed in as <span className="auth-card__role">{user.role}</span>
-              </p>
-
-              <button
-                type="button"
-                className="auth-submit"
-                onClick={() => {
-                  setUser(null)
-                  setShowAuth(false)
-                }}
-              >
-                Sign out
-              </button>
-            </div>
-            <SiteFooter variant="auth" />
-          </div>
-        </section>
+        <Profile 
+          user={user} 
+          onLogout={() => {
+            setUser(null)
+            setShowAuth(false)
+          }} 
+        />
       )}
     </main>
   )

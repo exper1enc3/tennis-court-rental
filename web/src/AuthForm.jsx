@@ -53,12 +53,19 @@ function AuthForm({ onLoginSuccess }) {
 
     try {
       if (isLogin) {
-        const data = await authApi.signin({
+        const responseData = await authApi.signin({
           email: formData.email,
           password: formData.password,
         })
-        console.log(data)
-        onLoginSuccess(data.user)
+        
+        console.log("Відповідь бекенду:", responseData)
+
+        // Перевіряємо формат даних: чи є вкладений об'єкт user, чи дані лежать на верхньому рівні
+        if (responseData.user) {
+          onLoginSuccess(responseData.user)
+        } else {
+          onLoginSuccess(responseData)
+        }
       } else {
         await authApi.signup({
           first_name: formData.first_name,
