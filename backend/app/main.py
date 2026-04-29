@@ -9,6 +9,10 @@ from app.models import Court, Permission, Role, User
 from app.routers import api_router
 from app.security import hash_password
 
+from fastapi import FastAPI
+
+from app.routers import admin, bookings, courts, dashboard
+
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
 app.add_middleware(
@@ -119,3 +123,14 @@ def health() -> dict[str, str]:
 
 app.include_router(api_router())
 
+app = FastAPI(title="Tennis Court Rental API")
+
+app.include_router(bookings.router, prefix="/bookings", tags=["Bookings"])
+app.include_router(courts.router, prefix="/courts", tags=["Courts"])
+app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
+app.include_router(admin.router, prefix="/admin", tags=["Admin"])
+
+
+@app.get("/")
+def root():
+    return {"status": "ok"}

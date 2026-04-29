@@ -36,6 +36,35 @@ def get_court(court_id: str, db: Session = Depends(get_db)) -> CourtResponse:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Court not found")
     return court
 
+
+def ensure_court_owner_or_admin(user: User, owner_id: str) -> None:
+    if user.role != "admin" and user.id != owner_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
+
+
+@router.patch("/{court_id}", response_model=CourtResponse)
+def update_court(
+    court_id: str,
+    payload: CourtUpdate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> CourtResponse:
+    court = db.get(Court, court_id)
+
+    if court is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Court not found")
+
+    ensure_court_owner_or_admin(user, court.owner_id)
+
+    for key, value in payload.model_dump(exclude_unset=True).items():
+        setattr(court, key, value)
+
+    db.commit()
+    db.refresh(court)
+
+    event_logger.append("court.updated", user.id, {"court_id": court.id})
+
+    return court
 # [Masik sprint: update_court inserted here]
 # [Vlad sprint: delete_court inserted here]
 # [Andrii sprint: get_availability inserted here]

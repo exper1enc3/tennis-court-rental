@@ -86,6 +86,32 @@ def delete_user(user_id: int, user: User = Depends(get_current_user), db: Sessio
     event_logger.append("admin.user_deleted", user.id, {"target_user_id": user_id})
     return Message(message="User deleted.")
 
+
+def _admin_only(user: User) -> None:
+    if user.role != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin only")
+
+
+@router.post("/event-log/replay", response_model=EventReplayResponse)
+def replay_event_log(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> EventReplayResponse:
+    _admin_only(user)
+
+    ok, _ = event_logger.verify_chain()
+
+    if not ok:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Event log integrity check failed",
+        )
+
+    count = replay_events(event_logger.path, db)
+
+    event_logger.append("event_log.replayed", user.id, {"events_replayed": count})
+
+    return EventReplayResponse(ok=True, events_replayed=count)
 # [Andrii sprint: RBAC endpoints inserted here]
 # [Ulia sprint: list_all_bookings inserted here]
 # [Masik sprint: replay_event_log inserted here]
