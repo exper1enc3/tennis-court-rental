@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/app
     expose:
-      - "5000"
+      - "5000:5000"
     command: >
       sh -c "pip install --no-cache-dir -r requirements.txt &&
       alembic upgrade head &&

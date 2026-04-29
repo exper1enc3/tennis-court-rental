@@ -4,12 +4,19 @@ import uvicorn
 
 from app.api.routes import router
 
+from app.infrastructure.sqlite import engine, Base
+from app.infrastructure.models import * 
+
 app = FastAPI(title="courtly")
+
+@app.on_event("startup")
+def on_startup():
+    Base.metadata.create_all(bind=engine)
 
 # Enable CORS so the React frontend can communicate with this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Your Vite dev server URL
+    allow_origins=["http://localhost:5173", "https://orange-mud-027edf503.1.azurestaticapps.net"],  # Your Vite dev server URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

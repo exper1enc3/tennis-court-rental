@@ -11,7 +11,7 @@ import time
 _PBKDF2_ALGORITHM = "sha256"
 _PBKDF2_ITERATIONS = 200_000
 _PBKDF2_SALT_BYTES = 16
-_TOKEN_TTL_SECONDS = 60 * 60 * 24  # 24 hours
+_TOKEN_TTL_SECONDS = 60 * 60 * 24 
 
 
 def _b64url_encode(raw: bytes) -> str:
@@ -97,3 +97,31 @@ def generate_token(user_id: int, role: str) -> str:
     signature_part = _b64url_encode(signature)
 
     return f"{header_part}.{payload_part}.{signature_part}"
+
+def decode_token(token: str) -> dict | None:
+    """
+    Verify and decode signed bearer token.
+    Returns payload dict or None if invalid/expired.
+    """
+    secret = os.getenv("AUTH_SECRET", "dev-secret-change-me").encode("utf-8")
+
+    try:
+        header_part, payload_part, signature_part = token.split(".")
+    except ValueError:
+        return None
+
+    signing_input = f"{header_part}.{payload_part}".encode("ascii")
+    expected_signature = hmac.new(secret, signing_input, hashlib.sha256).digest()
+
+    if not hmac.compare_digest(_b64url_decode(signature_part), expected_signature):
+        return None
+
+    payload = json.loads(_b64url_decode(payload_part))
+
+    if payload.get("exp", 0) < int(time.time()):
+        return None
+
+    return {
+        "user_id": int(payload["sub"]),
+        "role": payload["role"],
+    }
