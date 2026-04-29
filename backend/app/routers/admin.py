@@ -113,5 +113,20 @@ def replay_event_log(
 
     return EventReplayResponse(ok=True, events_replayed=count)
 # [Andrii sprint: RBAC endpoints inserted here]
-# [Ulia sprint: list_all_bookings inserted here]
+@router.get("/bookings", response_model=list[dict])
+def list_all_bookings(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> list[dict]:
+    _admin_only(user)
+    bookings = list(db.scalars(select(Booking).order_by(Booking.created_at.desc())))
+    return [
+        {
+            "id": b.id,
+            "court_id": b.court_id,
+            "user_id": b.user_id,
+            "status": b.status,
+            "starts_at": b.starts_at,
+            "ends_at": b.ends_at,
+            "total_price": b.total_price,
+        }
+        for b in bookings
+    ]
 # [Masik sprint: replay_event_log inserted here]
