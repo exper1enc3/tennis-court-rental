@@ -109,5 +109,31 @@ def message_moderator(payload: ModeratorMessageRequest, user: User = Depends(get
     )
     return Message(message="Message sent to moderator.")
 
-# [Ulia sprint: favorites endpoints inserted here]
+@router.get("/favorites", response_model=list[FavoriteResponse])
+def list_favorites(user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> list[FavoriteResponse]:
+    return list(db.scalars(select(Favorite).where(Favorite.user_id == user.id)))
+
+@router.post("/favorites", response_model=FavoriteResponse, status_code=status.HTTP_201_CREATED)
+def add_favorite(
+    payload: FavoriteRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)
+) -> FavoriteResponse:
+    existing = db.scalar(select(Favorite).where(Favorite.user_id == user.id, Favorite.court_id == payload.court_id))
+    if existing:
+        return existing
+    favorite = Favorite(user_id=user.id, court_id=payload.court_id)
+    db.add(favorite)
+    db.commit()
+    db.refresh(favorite)
+    event_logger.append("favorite.added", user.id, {"court_id": payload.court_id})
+    return favorite
+
+@router.delete("/favorites/{court_id}", response_model=Message)
+def remove_favorite(court_id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Message:
+    favorite = db.scalar(select(Favorite).where(Favorite.user_id == user.id, Favorite.court_id == court_id))
+    if favorite:
+        db.delete(favorite)
+        db.commit()
+        event_logger.append("favorite.removed", user.id, {"court_id": court_id})
+    return Message(message="Favorite removed.")
+
 # [Andrii sprint: reviews endpoints inserted here]
