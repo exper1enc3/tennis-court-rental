@@ -44,5 +44,13 @@ class Court(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 # [Vlad sprint: Booking class inserted here]
-# [Ulia sprint: Favorite class inserted here]
+class Favorite(Base):
+    __tablename__ = "favorites"
+    __table_args__ = (UniqueConstraint("user_id", "court_id", name="uq_favorite_user_court"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    court_id: Mapped[str] = mapped_column(ForeignKey("courts.id"), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
 # [Andrii sprint: Review, Role, Permission, RolePermission, Policy, RoleBinding classes inserted here]
